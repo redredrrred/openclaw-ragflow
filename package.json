@@ -1,0 +1,49 @@
+{
+  "name": "openclaw-ragflow-knowledge",
+  "version": "1.0.0",
+  "description": "RAGFlow knowledge base integration plugin for OpenClaw",
+  "type": "module",
+  "main": "index.ts",
+  "exports": {
+    ".": {
+      "default": "./index.ts"
+    },
+    "./openclaw.plugin.json": "./openclaw.plugin.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "lint": "oxlint --type-aware",
+    "format": "oxfmt --write"
+  },
+  "keywords": [
+    "openclaw",
+    "plugin",
+    "ragflow",
+    "knowledge-base",
+    "retrieval",
+    "rag"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.48"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "openclaw": "workspace:*",
+    "oxfmt": "0.35.0",
+    "oxlint": "^1.50.0",
+    "tsdown": "^0.20.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.2.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
