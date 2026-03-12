@@ -22,18 +22,41 @@ Connect OpenClaw to [RAGFlow](https://ragflow.io) knowledge bases for intelligen
 
 ### 2. Configure the Plugin
 
-Add to your `~/.openclaw/config.yaml`:
+Add to your `~/.openclaw/openclaw.json`:
 
-```yaml
-plugins:
-  entries:
-    ragflow-knowledge:
-      apiUrl: "http://localhost:80"
-      apiKey: "${RAGFLOW_API_KEY}"
-      datasetIds:                    # Optional: specific datasets
-        - "dataset-123"
-      autoInject: true
+```json
+{
+  "plugins": {
+    "allow": ["ragflow-knowledge"],
+    "entries": {
+      "ragflow-knowledge": {
+        "enabled": true,
+        "config": {
+          "apiUrl": "http://localhost:80",
+          "apiKey": "${RAGFLOW_API_KEY}",
+          "datasetIds": ["dataset-123"],
+          "autoInject": true,
+          "similarityThreshold": 0.2,
+          "topK": 5,
+          "maxInjectChars": 2000
+        }
+      }
+    }
+  }
+}
 ```
+
+**Configuration Options:**
+
+| Option | Type | Required | Default | Description |
+|--------|------|----------|---------|-------------|
+| `apiUrl` | string | ✅ Yes | - | RAGFlow server URL |
+| `apiKey` | string | ✅ Yes | - | RAGFlow API key |
+| `datasetIds` | array | No | `null` (search all) | Specific dataset IDs to search |
+| `autoInject` | boolean | No | `true` | Auto-inject relevant knowledge into conversations |
+| `similarityThreshold` | number | No | API default | Minimum similarity score (0-1) |
+| `topK` | number | No | API default | Maximum chunks to retrieve |
+| `maxInjectChars` | number | No | `2000` | Maximum characters for auto-injected context |
 
 ### 3. Restart OpenClaw
 
@@ -58,6 +81,9 @@ openclaw ragflow search "your query"
 
 # List all knowledge bases
 openclaw ragflow datasets
+
+# Check plugin health
+openclaw ragflow health
 ```
 
 ### Auto-Context Injection
@@ -77,11 +103,14 @@ When enabled (default), the plugin automatically searches for relevant knowledge
 
 ## Troubleshooting
 
-### Plugin Not Found
+### Plugin Not Loading
 
 ```bash
+# Check plugin status
 openclaw doctor
-npm install -g openclaw@latest
+
+# Check logs
+tail -f ~/.openclaw/logs/gateway.log
 ```
 
 ### API Connection Error
@@ -89,14 +118,25 @@ npm install -g openclaw@latest
 ```bash
 # Check RAGFlow server is running
 curl http://localhost:80/api/v1/datasets -H "Authorization: Bearer YOUR_API_KEY"
+
+# Test plugin health
+openclaw ragflow health
 ```
+
+### Auto-Inject Not Working
+
+- Check `autoInject: true` is set in config
+- Verify `datasetIds` are correct (empty array = search all)
+- Check plugin health status: `openclaw ragflow health`
+- Plugin enters cooldown after 3 consecutive errors (1 minute cooldown)
 
 ### No Results Returned
 
-- Lower `similarityThreshold` (e.g., `0.05`)
+- Lower `similarityThreshold` (e.g., `0.1` or `0.05`)
 - Increase `topK` (e.g., `10`)
 - Check dataset has documents uploaded
 - Verify documents have been parsed
+- Try manual search: `openclaw ragflow search "your query"`
 
 ## License
 
