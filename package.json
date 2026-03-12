@@ -1,8 +1,11 @@
 {
-  "name": "openclaw-ragflow-knowledge",
+  "name": "ragflow-knowledge",
   "version": "1.0.0",
   "description": "RAGFlow knowledge base integration plugin for OpenClaw",
   "type": "module",
+  "openclaw": {
+    "extensions": ["./index.ts"]
+  },
   "main": "index.ts",
   "exports": {
     ".": {
@@ -32,7 +35,6 @@
   },
   "devDependencies": {
     "@types/node": "^25.3.0",
-    "openclaw": "workspace:*",
     "oxfmt": "0.35.0",
     "oxlint": "^1.50.0",
     "tsdown": "^0.20.3",
